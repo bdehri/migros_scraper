@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 logging.basicConfig(level=logging.DEBUG)
 
-@app.route('/')
+@app.route('/migros_parser')
 def parse():
     resp = Response(parse_migros())
     date = datetime.now().strftime("%d-%m-%Y")
