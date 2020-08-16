@@ -21,7 +21,7 @@ def parse():
 
 def parse_migros():
     print("parse_migros")
-    
+
     base_url="https://www.migros.com.tr"
 
     category_suffix=["gazli-icecek-c-80","gazsiz-icecek-c-81","cay-c-475","kahve-c-476","su-c-84","maden-suyu-c-85"]
