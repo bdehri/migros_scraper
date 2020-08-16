@@ -4,12 +4,12 @@ from datetime import datetime
 from bs4 import BeautifulSoup as bs
 import requests
 import json
-
-import pandas as pd
-import numpy as np
-
+import logging
 
 app = Flask(__name__)
+
+logging.basicConfig(level=logging.DEBUG)
+
 @app.route('/')
 def parse():
     resp = Response(parse_migros())
@@ -20,11 +20,13 @@ def parse():
 
 
 def parse_migros():
+    print("parse_migros")
+    
     base_url="https://www.migros.com.tr"
 
     category_suffix=["gazli-icecek-c-80","gazsiz-icecek-c-81","cay-c-475","kahve-c-476","su-c-84","maden-suyu-c-85"]
-    array_of_items=[]
 
+    csv_string = "İsim,Kategori,Fiyat,url,Marka\n"
     for category in category_suffix:
         i=1
         while True:
@@ -40,15 +42,11 @@ def parse_migros():
                 break
 
             for item in items_json_array:
-                obj={}
-                obj["İsim"]=item["name"]
-                obj["Kategori"]=item["category"]
-                obj["Fiyat"]=item["offers"]["price"]
-                obj["url"]=item["url"]
-                obj["Marka"]=item["brand"]["name"]
-                array_of_items.append(obj)
+                csv_string += get_csv_string(item)
+
             i+=1
-            break
-                
-    data_frame=pd.DataFrame(array_of_items)
-    return data_frame.to_csv()
+
+    return csv_string
+
+def get_csv_string(item):
+    return "\"{}\",\"{}\",\"{}\",\"{}\",\"{}\"\n".format(item["name"], item["category"], item["offers"]["price"], item["url"], item["brand"]["name"])
